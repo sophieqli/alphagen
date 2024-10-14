@@ -5,3 +5,4 @@ def example():
 
 def main():
     print("Usage: greet")
+
