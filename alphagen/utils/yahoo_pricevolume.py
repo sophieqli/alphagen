@@ -547,7 +547,7 @@ symbols = [ "A", "AA", "AAAU", "AAL", "AAN", "AAOI", "AAON", "AAP",
 
 today = datetime.today().strftime("%Y%m%d")
 
-basedir = f"/home/xdli/database_py/yahoo/{today}"
+basedir = f"/Users/sophieli/stockdata/yahoo"
 os.makedirs(basedir, exist_ok=True )
 
 
@@ -566,5 +566,5 @@ def get_pricevolume(symbol, basedir):
 
 # Download historical data for each symbol
 for symbol in symbols:
-    #get_pricevolume(symbol, basedir, date2)
+    get_pricevolume(symbol, basedir)
     get_info(symbol, basedir)
