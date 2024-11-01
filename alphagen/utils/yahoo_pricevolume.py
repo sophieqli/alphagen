@@ -547,9 +547,10 @@ symbols = [ "A", "AA", "AAAU", "AAL", "AAN", "AAOI", "AAON", "AAP",
 
 today = datetime.today().strftime("%Y%m%d")
 
-basedir = f"/Users/sophieli/stockdata/yahoo"
-os.makedirs(basedir, exist_ok=True )
-
+username = os.getenv("USER") or os.getenv("LOGNAME")
+basedir = f"/Users/{username}/stockdata/yahoo"
+os.makedirs( f"{basedir}/stockinfo", exist_ok=True )
+os.makedirs( f"{basedir}/pricevolume", exist_ok=True )
 
 def get_info(symbol, basedir):
     print(f"Fetching reference data for {symbol} to {basedir}...")
@@ -560,11 +561,13 @@ def get_info(symbol, basedir):
 
 def get_pricevolume(symbol, basedir):
     print(f"Downloading {symbol} to {basedir}...")
-    today2 = datetime.today().strftime("%Y-%m-%d")
-    data = yf.download(symbol, start="2010-01-01", end=today2)  # Adjust dates as needed
+    #today2 = datetime.today().strftime("%Y-%m-%d")
+    #data = yf.download(symbol, start="2010-01-01", end=today2)  # Adjust dates as needed
+    #import pdb; pdb.set_trace()
+    data = yf.Ticker(symbol).history(start='2010-01-01')
     data.to_csv( f"{basedir}/pricevolume/{symbol}.csv")
 
 # Download historical data for each symbol
 for symbol in symbols:
     get_pricevolume(symbol, basedir)
-    get_info(symbol, basedir)
+    #get_info(symbol, basedir)
