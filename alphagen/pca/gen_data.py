@@ -16,7 +16,11 @@ for symbol in x['Symbol']:
         data.set_index('Date', inplace=True)
         #create the return sequence
         #print( data.head() )
-        ret_df = pd.concat( [ret_df, data['Close'].rename(symbol) ], axis=1 )
+
+        #TODO: compute the return t = close_t / close_t-1 - 1 put the return here 
+        ret = data['Close'].rename(symbol)
+
+        ret_df = pd.concat( [ret_df, ret ], axis=1 )
     else:
         print(f"{filename} does not exist.")
 
