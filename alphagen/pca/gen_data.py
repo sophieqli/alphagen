@@ -1,5 +1,9 @@
 import os
+import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
 
 username = os.getenv("USER") or os.getenv("LOGNAME")
 filename = f"/Users/{username}/stockdata/universe/SP500.csv"
@@ -18,7 +22,8 @@ for symbol in x['Symbol']:
         #print( data.head() )
 
         #TODO: compute the return t = close_t / close_t-1 - 1 put the return here 
-        ret = data['Close'].rename(symbol)
+        close = data['Close'].rename(symbol)
+        ret = close / close.shift(1) - 1
 
         ret_df = pd.concat( [ret_df, ret ], axis=1 )
     else:
@@ -27,3 +32,20 @@ for symbol in x['Symbol']:
 
 ret_df = ret_df.sort_index(axis=1)
 print( ret_df )
+ret_df = ret_df.fillna(0)
+ret_df = ret_df.loc[:,ret_df.sum() != 0]
+
+
+# Standardize the data
+scaler = StandardScaler()
+ret_df_scaled = scaler.fit_transform(ret_df)
+
+print( np.var( ret_df_scaled, axis=0 ) )
+
+pca = PCA(n_components=2)  # Number of components to keep
+principal_components = pca.fit_transform(ret_df_scaled)
+
+# Create a DataFrame for the principal components
+pc_df = pd.DataFrame(data=principal_components, columns=['PC1', 'PC2'])
+
+import pdb; pdb.set_trace()
